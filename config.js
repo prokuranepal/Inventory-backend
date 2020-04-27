@@ -1,3 +1,6 @@
 module.exports = {
-    'secretKey': 'youcankeepanyvalue'
+    'secretKey': 'youcankeepanyvalue',
+    'whitelist' : [
+        'http://localhost:3000'
+    ]
 }
