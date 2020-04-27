@@ -9,6 +9,7 @@ var passport = require('passport');
 var authenticate = require('./authenticate');
 
 var indexRouter = require('./routes/index');
+var userRouter = require('./routes/userRouter');
 
 var mongoose = require('mongoose');
 var mongoose_init = require('./models/db');
@@ -29,7 +30,7 @@ app.use(passport.initialize());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-// app.use('/users', usersRouter);
+app.use('/users', userRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
