@@ -10,6 +10,7 @@ var authenticate = require('./authenticate');
 
 var indexRouter = require('./routes/index');
 var userRouter = require('./routes/userRouter');
+var medicineRouter = require('./routes/medicineRouter');
 
 var mongoose = require('mongoose');
 var mongoose_init = require('./models/db');
@@ -31,6 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', userRouter);
+app.use('/medicines', medicineRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -45,7 +47,11 @@ app.use(function(err, req, res, next) {
 
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  res.json({
+    status: false,
+    message: err.message
+  });
+  // res.render('error');
 });
 
 module.exports = app;
