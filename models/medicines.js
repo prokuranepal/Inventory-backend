@@ -35,6 +35,10 @@ const Medicine = new Schema({
     description: {
         type:String,
         default:''
+    },
+    type: {
+        type: String,
+        required: true
     }
 }, {
     timestamps: true
