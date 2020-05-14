@@ -16,18 +16,26 @@ userRouter.options('*', cors.corsWithOptions, (req, res) => {
 
 userRouter.post('/signup', cors.corsWithOptions, (req, res, next) => {
   User.register(new User({
-    username: req.body.username
-  }), req.body.password, (err, user) => {
+    email: req.body.email,
+    phonenumber: req.body.phone_number,
+    firstname: req.body.first_name,
+    lastname: req.body.last_name
+  }), req.body.password, function (err, user) {
     if (err) {
       res.statusCode = 500;
       res.setHeader('Content-Type', 'application/json');
-      res.json({
+      if (err.errmsg && (err.errmsg).includes('phonenumber')) {
+        var phoneError = {};
+        phoneError.name = 'PhoneNumberExistsError';
+        phoneError.message = 'User with Phone number already exists';
+        return res.json({
+          err: phoneError
+        });
+      }
+      return res.json({
         err: err
       });
     } else {
-      if (req.body.firstname) user.firstname = req.body.firstname;
-      if (req.body.lastname) user.lastname = req.body.lastname;
-
       user.save((err, user) => {
         if (err) {
           res.statusCode = 500;
@@ -56,7 +64,7 @@ userRouter.post('/login', cors.corsWithOptions, (req, res, next) => {
     if (!user) {
       res.statusCode = 401;
       res.setHeader('Content-Type', 'application/json');
-      res.json({
+      return res.json({
         success: false,
         status: 'Login Unsuccessful',
         err: info
@@ -66,7 +74,7 @@ userRouter.post('/login', cors.corsWithOptions, (req, res, next) => {
       if (err) {
         res.statusCode = 401;
         res.setHeader('Content-Type', 'application/json');
-        res.json({
+        return res.json({
           success: false,
           status: 'Login Unsuccessful',
           err: 'Could not log in user'
@@ -79,7 +87,7 @@ userRouter.post('/login', cors.corsWithOptions, (req, res, next) => {
 
       res.statusCode = 401;
       res.setHeader('Content-Type', 'application/json');
-      res.json({
+      return res.json({
         success: true,
         token: token,
         status: 'Login successful'
