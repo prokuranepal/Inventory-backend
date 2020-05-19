@@ -8,7 +8,7 @@ const jwt = require('jsonwebtoken');
 
 var config = require('./config');
 
-exports.local = passport.use(new LocalStrategy(User.authenticate()));
+exports.local = passport.use(User.createStrategy());
 
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
