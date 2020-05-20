@@ -47,7 +47,11 @@ medicine: [{
       },
       coordinates: [Number],
       select: false
-    }
+    },
+
+},{
+
+    timestamps: true
 
 
 
