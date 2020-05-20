@@ -1,9 +1,7 @@
 const mongoose = require("mongoose");
-const userInfo = require("./users");
-const medicineInfo = require("./medicines");
 
 
-const healthpostschema = new mongoose.Schema({
+const HealthPostSchema = new mongoose.Schema({
 
     name:{
         type:String,
@@ -14,23 +12,38 @@ const healthpostschema = new mongoose.Schema({
         required: true
     },
 
-    employee  : {
-
-    type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-},
-    medicine:{
+   
+    employee: [{
         
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Medicine',
-       
-    },
+     
 
-    gpslocation :{'type': {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        
+        
+     
+
+
+    }],
+   
+
+ 
+
+    
+medicine: [{
+    
+
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Medicine'
+    
+}],
+
+
+    gps_location :{'type': {
         type: String,
-        required: true,
-        enum: ['Point', 'LineString', 'Polygon'],
-        default: 'Point'
+        required: false,
+        enum: ['Point']
+        
       },
       coordinates: [Number],
       select: false
@@ -40,4 +53,4 @@ const healthpostschema = new mongoose.Schema({
 
 })
 
-module.exports = mongoose.model('healthpostschema',healthpostschema);
+module.exports = mongoose.model('HealthPost',HealthPostSchema);
