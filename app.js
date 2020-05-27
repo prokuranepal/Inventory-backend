@@ -19,6 +19,7 @@ var healthPostRouter= require('./routes/healthPostRouter');
 var mongoose = require('mongoose'); // Mongoose to interact with mongodb database
 var mongoose_init = require('./models/db'); // Initialiation/connection with mongodb database
 
+
 var app = express();  // Initialized a express application
 
 // view engine setup
@@ -29,7 +30,8 @@ app.use(logger('dev')); // Logging of request in the
 app.use(bodyParser.json()); // puts data in request.body from POST request
 app.use(bodyParser.urlencoded({ extended: false }));  // puts data in request.query from GET request(or form url)
 
-app.use(passport.initialize()); // Initialize passport to use as a middleware.
+app.use(passport.initialize());
+ // Initialize passport to use as a middleware.
 
 
 app.use(express.static(path.join(__dirname, 'public')));  // static file to be linked and accessed from public folder.
@@ -59,12 +61,5 @@ app.use(function(err, req, res, next) {
   // res.render('error');
 });
 
-mongoose.connect('config.mongourl',{useNewUrlParser: true},() =>{
-  console.log("connected to database");
-})
-
-app.listen(3000);
-
-// app.listen(3000);
 
 module.exports = app;
