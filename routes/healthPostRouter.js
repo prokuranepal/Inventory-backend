@@ -37,12 +37,10 @@ healthPostRouter.route('/')
         res.json(healthPost);
       }, (err) => next(err))
       .catch((err) => next(err));
-
-
   })
 
 
-  .delete('/', cors.corsWithOptions, async (req, res, next) => {
+  .delete(cors.corsWithOptions, async (req, res, next) => {
 
     Healthpost.remove({})
       .then((healthPost) => {
@@ -74,23 +72,25 @@ healthPostRouter.route('/:healthpostId')
 
   })
 
-  .put('/:healthpostId', cors.cors, (req, res, next) => {
-    const medicines = {
-      medicine: req.body.medicine
-    }
-    Healthpost.findByIdAndUpdate({ _id: req.params.healthpostId }, medicines)
+  .put(cors.cors, (req, res, next) => {
+
+    Healthpost.findByIdAndUpdate(req.params.healthpostId,{
+      $set: req.body
+    }, {
+      new: true
+    })
       .then((medicineResult) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
-        res.json(medicineResult);
+        res.json(medicineResult.medicine);
       }, (err) => next(err))
       .catch((err) => next(err));
   })
 
 
-  .delete('/:healthpostId', cors.cors, (req, res, next) => {
-    Healthpost.findOne({ _id: req.params.healthpostId }).remove('medicine')
-      .then((medicine) => {
+  .delete(cors.cors, (req, res, next) => {
+    Healthpost.findByIdAndRemove( req.params.healthpostId )
+    .then((healthPost) =>{
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.json({
