@@ -66,7 +66,7 @@ healthPostRouter.route('/:healthpostId')
       .then((healthPost) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
-        res.json(healthPost.medicine);
+        res.json(healthPost);
       }, (err) => next(err))
       .catch((err) => next(err));
 
@@ -74,7 +74,7 @@ healthPostRouter.route('/:healthpostId')
 
   .put(cors.cors, (req, res, next) => {
 
-    Healthpost.findByIdAndUpdate(req.params.healthpostId,{
+    Healthpost.findByIdAndUpdate(req.params.healthpostId, {
       $set: req.body
     }, {
       new: true
@@ -82,15 +82,15 @@ healthPostRouter.route('/:healthpostId')
       .then((medicineResult) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
-        res.json(medicineResult.medicine);
+        res.json(medicineResult);
       }, (err) => next(err))
       .catch((err) => next(err));
   })
 
 
   .delete(cors.cors, (req, res, next) => {
-    Healthpost.findByIdAndRemove( req.params.healthpostId )
-    .then((healthPost) =>{
+    Healthpost.findByIdAndRemove(req.params.healthpostId)
+      .then((healthPost) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.json({
