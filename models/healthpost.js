@@ -18,7 +18,7 @@ const HealthPostSchema = new mongoose.Schema({
         ref: 'User'
     }],
 
-    medicine: [{
+    medicine:[ {
 
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Medicine'
