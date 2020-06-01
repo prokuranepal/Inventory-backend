@@ -17,8 +17,9 @@ const SuppliersSchema = new mongoose.Schema({
     Medicinetype: [{
         type: String
     }
-    ]
+    ],
 
+    timestamps: true
 
 });
 
