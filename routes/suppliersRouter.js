@@ -1,8 +1,14 @@
-const Suppliers = require('../models/suppliers');
-const cors = require('./cors');
 const express = require('express');
-const suppliersRouter = express.Router();
 const bodyparser = require('body-parser');
+const mongoose = require('mongoose');
+
+const authenticate = require('../authenticate');
+
+const cors = require('./cors');
+
+const Suppliers = require('../models/suppliers');
+const suppliersRouter = express.Router();
+
 
 suppliersRouter.use(bodyparser.json());
 
@@ -55,7 +61,6 @@ suppliersRouter.route('/:suppliersId')
     .get(cors.cors, (req, res, next) => {
         Suppliers.findById({ _id: req.params.suppliersId })
             .then((supplier) => {
-                console.log(supplier);
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
                 res.json(supplier);
