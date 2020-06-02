@@ -18,9 +18,9 @@ const SuppliersSchema = new mongoose.Schema({
         type: String
     }
     ],
+},{
 
     timestamps: true
-
 });
 
 module.exports = mongoose.model('Suppliers', SuppliersSchema);
