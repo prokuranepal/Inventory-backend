@@ -16,13 +16,6 @@ bloodRouter.route('/')
   })
 
   .get(cors.cors, (req, res, next) => {
-
-    // const blood_check = {}
-
-    // if (req.query.bloodGroup) {
-    //   blood_check.bloodGroup= req.query.bloodGroup;
-    //  }
-
     Blood.find({})
       .populate({
         path: 'healthpost'
@@ -37,7 +30,6 @@ bloodRouter.route('/')
   })
 
   .post(cors.cors, (req, res, next) => {
-
     Blood.create(req.body)
       .then((blood) => {
         res.statusCode = 200;
@@ -48,7 +40,6 @@ bloodRouter.route('/')
   })
 
   .delete(cors.cors, (req, res, next) => {
-
     Blood.remove({})
       .then((blood) => {
         res.statusCode = 200;
@@ -63,9 +54,7 @@ bloodRouter.route('/')
 
 
 bloodRouter.route('/:bloodId')
-
   .get(cors.corsWithOptions, async (req, res, next) => {
-
     Blood.findOne({ _id: req.params.bloodId })
       .populate('healthpost')
       .then((blood) => {
@@ -78,7 +67,6 @@ bloodRouter.route('/:bloodId')
   })
 
   .put(cors.cors, (req, res, next) => {
-
     Blood.findByIdAndUpdate(req.params.bloodId, {
       $set: req.body
     }, {
@@ -94,7 +82,6 @@ bloodRouter.route('/:bloodId')
 
 
   .delete(cors.cors, (req, res, next) => {
-
     Blood.findByIdAndRemove(req.params.bloodId)
       .then((blood) => {
         res.statusCode = 200;
