@@ -16,7 +16,7 @@ bloodRouter.route('/')
   })
 
   .get(cors.cors, (req, res, next) => {
-    Blood.find({})
+    Blood.find({ bloodGroup: req.query.bloodGroup })
       .populate({
         path: 'healthpost'
       })
@@ -27,6 +27,7 @@ bloodRouter.route('/')
         res.json(blood);
       }, (err) => next(err))
       .catch((err) => next(err));
+
   })
 
   .post(cors.cors, (req, res, next) => {
@@ -40,7 +41,7 @@ bloodRouter.route('/')
   })
 
   .delete(cors.cors, (req, res, next) => {
-    Blood.remove({})
+    Blood.remove({ bloodGroup: req.query.bloodGroup })
       .then((blood) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
