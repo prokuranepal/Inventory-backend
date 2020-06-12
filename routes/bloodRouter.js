@@ -16,17 +16,29 @@ bloodRouter.route('/')
   })
 
   .get(cors.cors, (req, res, next) => {
-    Blood.find({ bloodGroup: req.query.bloodGroup })
-      .populate({
-        path: 'healthpost'
-      })
-      .then((blood) => {
-        console.log(blood);
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json(blood);
-      }, (err) => next(err))
-      .catch((err) => next(err));
+    if (req.query.bloodGroup) {
+      Blood.find({ bloodGroup: req.query.bloodGroup })
+        .populate('healthpost')
+        .then((blood) => {
+          console.log(blood);
+          res.statusCode = 200;
+          res.setHeader('Content-Type', 'application/json');
+          res.json(blood);
+        }, (err) => next(err))
+        .catch((err) => next(err));
+    }
+    else {
+      Blood.find({})
+        .populate('healthpost')
+        .then((blood) => {
+          console.log(blood);
+          res.statusCode = 200;
+          res.setHeader('Content-Type', 'application/json');
+          res.json(blood);
+        }, (err) => next(err))
+        .catch((err) => next(err));
+    }
+
 
   })
 
@@ -41,16 +53,30 @@ bloodRouter.route('/')
   })
 
   .delete(cors.cors, (req, res, next) => {
-    Blood.remove({ bloodGroup: req.query.bloodGroup })
-      .then((blood) => {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json({
-          status: true,
-          message: 'Successfully deleted'
-        });
-      }, (err) => next(err))
-      .catch((err) => next(err));
+    if (req.query.bloodGroup) {
+      Blood.remove({ bloodGroup: req.query.bloodGroup })
+        .then((blood) => {
+          res.statusCode = 200;
+          res.setHeader('Content-Type', 'application/json');
+          res.json({
+            status: true,
+            message: 'Successfully deleted'
+          });
+        }, (err) => next(err))
+        .catch((err) => next(err));
+    }
+    else {
+      Blood.remove({})
+        .then((blood) => {
+          res.statusCode = 200;
+          res.setHeader('Content-Type', 'application/json');
+          res.json({
+            status: true,
+            message: 'Successfully deleted'
+          });
+        }, (err) => next(err))
+        .catch((err) => next(err));
+    }
   })
 
 
