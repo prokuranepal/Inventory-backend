@@ -20,7 +20,6 @@ bloodRouter.route('/')
       Blood.find({ bloodGroup: req.query.bloodGroup })
         .populate('healthpost')
         .then((blood) => {
-          console.log(blood);
           res.statusCode = 200;
           res.setHeader('Content-Type', 'application/json');
           res.json(blood);
@@ -31,7 +30,6 @@ bloodRouter.route('/')
       Blood.find({})
         .populate('healthpost')
         .then((blood) => {
-          console.log(blood);
           res.statusCode = 200;
           res.setHeader('Content-Type', 'application/json');
           res.json(blood);
