@@ -3,5 +3,7 @@ module.exports = {
     'whitelist' : [
         'http://localhost:3000'
     ],
-    'mongoUrl': 'mongodb://localhost:27017/inventory'
+
+    'mongoUrl': 'mongodb://localhost:27017/inventory',
+    'mongoTestUrl':'mongodb://localhost:27017/inventoryTest'
 }
