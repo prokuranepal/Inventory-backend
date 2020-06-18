@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "SET NODE_ENV && node ./bin/www",
-    "test": "mocha"
+    "start": "SET NODE_ENV=dev && node ./bin/www",
+    "test":"mocha"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
