@@ -32,6 +32,18 @@ describe('Healthpost', () => {
         HealthPost.collection.drop();
         done();
     });
+    it('It should GET all the records in the healthpost', (done) => {
+        chai.request(server)
+            .get('/healthpost')
+            .end((err, res) => {
+                res.should.have.status(200);
+                res.body.should.be.a('array');
+                res.body.length.should.be.eq(1);
+                done();
+
+            })
+    });
+    
 
 
 
