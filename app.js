@@ -15,7 +15,8 @@ var medicineRouter = require('./routes/medicineRouter');  // Medicine route whic
 
 var healthPostRouter= require('./routes/healthPostRouter');
 var vaccineRouter = require('./routes/vaccineRouter');
-
+var suppliersRouter = require('./routes/suppliersRouter');
+var bloodRouter = require('./routes/bloodRouter');
 
 var mongoose = require('mongoose'); // Mongoose to interact with mongodb database
 var mongoose_init = require('./models/db'); // Initialiation/connection with mongodb database
@@ -43,6 +44,9 @@ app.use('/users', userRouter);
 app.use('/medicines', medicineRouter);
 app.use('/healthpost',healthPostRouter);
 app.use('/vaccine',vaccineRouter);
+app.use('/suppliers',suppliersRouter);
+app.use('/blood',bloodRouter);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
