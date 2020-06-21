@@ -14,7 +14,7 @@ const VaccineSchema = new mongoose.Schema({
     },
 
     expiryDateTime: {
-        type: String,
+        type: Date,
         required: true
 
     },
