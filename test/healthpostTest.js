@@ -132,7 +132,7 @@ describe('Healthpost', () => {
             medicine: healthPost1.medicine,
             gps_location: 'xyz'
         })
-        healthpost.save((err, book) => {
+        healthpost.save((err, healthpost) => {
             chai.request(server)
                 .delete('/healthpost/' + healthpost.id)
                 .end((err, res) => {
