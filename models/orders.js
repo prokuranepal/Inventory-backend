@@ -13,18 +13,16 @@ const OrderItemSchema = new mongoose.Schema({
     }
 }, {
     timestamps: true
-})
-
+});
 
 const OrderSchema = new mongoose.Schema({
     order_id: {
         type: mongoose.Schema.Types.ObjectId,
         auto: true
     },
-
     orderItem:
-     [OrderItemSchema],
-     
+        [OrderItemSchema],
+
     date_order: {
         type: Date,
         required: true
@@ -47,8 +45,8 @@ const OrderSchema = new mongoose.Schema({
 
 
     }
-},{
-        timestamps: true
-    })
+}, {
+    timestamps: true
+})
 
 module.exports = mongoose.model('Orders', OrderSchema);
