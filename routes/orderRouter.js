@@ -5,6 +5,7 @@ const authenticate = require('../authenticate');
 const cors = require('./cors');
 
 const Orders = require('../models/orders');
+
 const orderRouter = express.Router();
 
 
@@ -56,12 +57,55 @@ orderRouter.route('/')
     });
 
 
-    // .delete(cors.corsWithOptions, async (req, res, next) => {
+orderRouter.route('/:orderId')
+
+    .get(cors.corsWithOptions, async (req, res, next) => {
+
+        orders.findOne({ _id: req.params.orderId })
+            .populate('created_User')
+            .populate('orderItem.medicine')
+            .then((order) => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json(order);
+            }, (err) => next(err))
+            .catch((err) => next(err));
+    })
+
+    .put(cors.cors, (req, res, next) => {
+
+        Orders.findByIdAndUpdate(req.params.ordertId, {
+            $set: req.body
+        }, {
+            new: true
+        })
+            .then((orderResult) => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json(orderResult);
+            }, (err) => next(err))
+            .catch((err) => next(err));
+    })
+
+    .delete(cors.cors, (req, res, next) => {
+        Orders.findByIdAndRemove(req.params.orderId)
+            .then((order) => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json({
+                    status: true,
+                    message: 'Successfully deleted'
+                });
+            }, (err) => next(err))
+            .catch((err) => next(err));
+    });
 
 
-    // })
+orderRouter.route('/:orderId/cancel')
+
+    .post(cors.corsWithOptions, async (req, res, next) => {
+
+    })
 
 
-
-
-    module.exports = orderRouter;
+module.exports = orderRouter;
