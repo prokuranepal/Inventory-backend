@@ -17,21 +17,37 @@ orderRouter.route('/')
 
     .get(cors.corsWithOptions, async (req, res, next) => {
         Orders.find({})
-        .populate('orderItem','created_User')
-        .then((order) => {
-          res.statusCode = 200;
-          res.setHeader('Content-Type', 'application/json');
-          res.json(order);
-        }, (err) => next(err))
-        .catch((err) => next(err));
-    
+            .populate('created_User')
+            .populate('orderItem.medicine')
+            .then((order) => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json(order);
+            }, (err) => next(err))
+            .catch((err) => next(err));
+
 
     })
 
     .post(cors.corsWithOptions, async (req, res, next) => {
+        Orders.create(req.body)
+            .then((order) => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json(order);
+            }, (err) => next(err))
+            .catch((err) => next(err));
 
     })
 
-    .delete(cors.corsWithOptions, async (req, res, next) => {
+   
 
-    })
+    // .delete(cors.corsWithOptions, async (req, res, next) => {
+
+
+    // })
+
+
+
+
+    module.exports = orderRouter;
