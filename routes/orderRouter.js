@@ -16,6 +16,15 @@ orderRouter.route('/')
     })
 
     .get(cors.corsWithOptions, async (req, res, next) => {
+        Orders.find({})
+        .populate('orderItem','created_User')
+        .then((order) => {
+          res.statusCode = 200;
+          res.setHeader('Content-Type', 'application/json');
+          res.json(order);
+        }, (err) => next(err))
+        .catch((err) => next(err));
+    
 
     })
 
