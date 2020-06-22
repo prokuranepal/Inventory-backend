@@ -40,7 +40,21 @@ orderRouter.route('/')
 
     })
 
-   
+    .delete(cors.corsWithOptions, async (req, res, next) => {
+
+        Orders.remove({})
+            .then((order) => {
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json({
+                    status: true,
+                    message: 'Successfully deleted'
+                });
+            }, (err) => next(err))
+            .catch((err) => next(err));
+
+    });
+
 
     // .delete(cors.corsWithOptions, async (req, res, next) => {
 
