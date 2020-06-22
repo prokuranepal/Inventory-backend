@@ -1,12 +1,11 @@
 const mongoose = require("mongoose");
+const medicineModel = require('./medicines');
 
 const OrderItemSchema = new mongoose.Schema({
 
-    medicine: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Medicine',
-        required: true
-    },
+    medicine:
+        [medicineModel.schema]
+    ,
     quantity: {
         type: Number,
         required: true
