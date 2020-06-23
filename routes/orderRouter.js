@@ -26,8 +26,6 @@ orderRouter.route('/')
                 res.json(order);
             }, (err) => next(err))
             .catch((err) => next(err));
-
-
     })
 
     .post(cors.corsWithOptions, async (req, res, next) => {
@@ -57,11 +55,11 @@ orderRouter.route('/')
     });
 
 
-orderRouter.route('/:orderId')
+orderRouter.route('/:order_id')
 
     .get(cors.corsWithOptions, async (req, res, next) => {
 
-        orders.findOne({ _id: req.params.orderId })
+        Orders.findOne(Orders.order_id)
             .populate('created_User')
             .populate('orderItem.medicine')
             .then((order) => {
@@ -74,7 +72,7 @@ orderRouter.route('/:orderId')
 
     .put(cors.cors, (req, res, next) => {
 
-        Orders.findByIdAndUpdate(req.params.ordertId, {
+        Orders.updateOne(Orders.order_id, {
             $set: req.body
         }, {
             new: true
@@ -88,7 +86,7 @@ orderRouter.route('/:orderId')
     })
 
     .delete(cors.cors, (req, res, next) => {
-        Orders.findByIdAndRemove(req.params.orderId)
+        Orders.deleteOne(Orders.order_id)
             .then((order) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
@@ -101,9 +99,19 @@ orderRouter.route('/:orderId')
     });
 
 
-orderRouter.route('/:orderId/cancel')
+orderRouter.route('/:order_id/cancel')
 
     .post(cors.corsWithOptions, async (req, res, next) => {
+
+        let data = Object.assign({}, { order_id: Orders.order_id }, req.body) || {}
+        Orders.create(data)
+            .then(order => {
+                res.send(200, order)
+                next()
+            })
+            .catch(err => {
+                res.send(500, err)
+            })
 
     })
 
