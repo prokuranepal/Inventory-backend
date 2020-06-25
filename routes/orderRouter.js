@@ -55,11 +55,11 @@ orderRouter.route('/')
     });
 
 
-orderRouter.route('/:order_id')
+orderRouter.route('/:orderId')
 
     .get(cors.corsWithOptions, async (req, res, next) => {
 
-        Orders.findOne(Orders.order_id)
+        Orders.findOne({ _id: req.params.orderId })
             .populate('created_User')
             .populate('orderItem.medicine')
             .then((order) => {
@@ -72,7 +72,7 @@ orderRouter.route('/:order_id')
 
     .put(cors.cors, (req, res, next) => {
 
-        Orders.updateOne(Orders.order_id, {
+        Orders.findByIdAndUpdate(req.params.orderId, {
             $set: req.body
         }, {
             new: true
@@ -86,7 +86,7 @@ orderRouter.route('/:order_id')
     })
 
     .delete(cors.cors, (req, res, next) => {
-        Orders.deleteOne(Orders.order_id)
+        Orders.findByIdAndRemove(req.params.orderId)
             .then((order) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
@@ -96,23 +96,24 @@ orderRouter.route('/:order_id')
                 });
             }, (err) => next(err))
             .catch((err) => next(err));
-    });
+    })
 
 
-orderRouter.route('/:order_id/cancel')
+orderRouter.route('/:orderId/cancel')
 
     .post(cors.corsWithOptions, async (req, res, next) => {
 
-        let data = Object.assign({}, { order_id: Orders.order_id }, req.body) || {}
-        Orders.create(data)
-            .then(order => {
-                res.send(200, order)
-                next()
-            })
-            .catch(err => {
-                res.send(500, err)
-            })
-
+        const order = Orders.findById(req.params.orderId)
+            .then((order) => {
+                if (!order) {
+                    res.status(404).send()
+                }
+                order.status = 'cancel'
+                order.save()
+                res.send(order)
+            }).catch((err) => {
+                next(err)
+            });
     })
 
 
