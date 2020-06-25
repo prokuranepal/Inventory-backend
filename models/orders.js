@@ -1,11 +1,13 @@
 const mongoose = require("mongoose");
-const medicineModel = require('./medicines');
 
 const OrderItemSchema = new mongoose.Schema({
 
-    medicine:
-        [medicineModel.schema]
-    ,
+    medicine: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Medicine',
+        required: true
+    },
+
     quantity: {
         type: Number,
         required: true
@@ -15,10 +17,7 @@ const OrderItemSchema = new mongoose.Schema({
 });
 
 const OrderSchema = new mongoose.Schema({
-    order_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        auto: true
-    },
+
     orderItem:
         [OrderItemSchema],
 
@@ -45,7 +44,7 @@ const OrderSchema = new mongoose.Schema({
             'cancel',
             'processing',
         ],
-        default: 'Processing'
+        default: 'processing'
     }
 }, {
     timestamps: true
