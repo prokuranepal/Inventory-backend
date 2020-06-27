@@ -110,11 +110,13 @@ orderRouter.route('/:orderId/cancel')
                 }
                 order.status = 'cancel'
                 order.save()
-                res.send(order)
-            }).catch((err) => {
-                next(err)
-            });
-    })
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.json(order);
+            }, (err) => next(err))
+            .catch((err) => next(err));
+    });
+
 
 
 module.exports = orderRouter;
