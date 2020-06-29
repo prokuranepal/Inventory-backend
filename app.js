@@ -49,7 +49,7 @@ app.use('/vaccine',vaccineRouter);
 app.use('/suppliers',suppliersRouter);
 app.use('/blood',bloodRouter);
 app.use('/orders',orderRouter);
-app.use('/hospital',hospita)
+app.use('/hospital',hospitalRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
