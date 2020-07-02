@@ -1,6 +1,7 @@
  
 sudo: true
 language: node_js
+services: mongodb
 node_js:
   - "v13.6.0"
 cache:
@@ -8,5 +9,5 @@ cache:
     - node_modules
 script:
   - npm test
-  
+
 #   - CI=false npm run build
