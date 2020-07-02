@@ -4,81 +4,56 @@ let HealthPost = require('../models/healthpost');
 var chai = require('chai');
 var server = require('../app');
 var chaiHTTP = require('chai-http');
-const healthpost = require('../models/healthpost');
 var should = chai.should();
 
 chai.use(chaiHTTP);
 
-
-//parent block
 describe('Healthpost', () => {
+    describe('Request on /healthpost', function () {
+        let healthPost = {
+            name: "kathmandu pharma",
+            location: "xyz",
+            gps_location: {
+                coordinates: ['45.22', '342.324']
+            }
+        };
 
-    let healthPost1 = new HealthPost({
-        name: "kathmandu pharma",
-        location: "xyz",
-        employee: ["5ec775664aca51093c9e68d0"],
-        medicine: ["5ec77dc24aca51093c9e68d2"],
-        gps_location: 'abc'
-    });
+        let healthpost_data = null;
 
-    beforeEach(function (done) {
-
-        healthPost1.save(function (err) {
-            done();
-        });
-    })
-
-    afterEach(function (done) {
-        HealthPost.collection.drop();
-        done();
-    });
-    it('It should GET all the records in the healthpost', (done) => {
-        chai.request(server)
-            .get('/healthpost')
-            .end((err, res) => {
-                res.should.have.status(200);
-                res.body.should.be.a('array');
-                res.body.length.should.be.eq(1);
-                done();
-
-            })
-    });
-    it('it should  POST healthpost information', (done) => {
-        const healthpost = {
-            name: "Baidhya healthpost",
-            location: 'xyz',
-            employee: healthPost1.employee,
-            medicine: healthPost1.medicine,
-            gps_location: 'tyu89'
-        }
-        chai.request(server)
-            .post('/healthpost')
-            .send(healthpost)
-            .end((err, res) => {
-                res.should.have.status(200);
-                res.body.should.be.a('object');
-                res.body.should.have.property('name');
-                res.body.should.have.property('location');
-                res.body.should.have.property('employee');
-                res.body.should.have.property('medicine');
-                res.body.should.have.property('gps_location');
+        before((done) => {
+            HealthPost(healthPost).save().then((data) => {
+                healthpost_data = data;
                 done();
             });
-    });
-
-
-    it('it should GET information about healthpost by the given id', (done) => {
-        const healthpost = new HealthPost({
-            name: "Baidhya healthpost",
-            location: 'xyz',
-            employee: healthPost1.employee,
-            medicine: healthPost1.medicine,
-            gps_location: 'tyu89'
         });
-        healthpost.save((err, healthpost) => {
+
+        after((done) => {
+            HealthPost.collection.drop();
+            done();
+        });
+
+        it('It should GET all the records in the healthpost', (done) => {
             chai.request(server)
-                .get('/healthpost/' + healthpost.id)
-                .send(healthpost)
+                .get('/healthpost')
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.be.a('array');
+                    res.body.length.should.be.eq(1);
+                    done();
+                });
+        });
+
+        it('it should  POST healthpost information', (done) => {
+            const healthpost_new = {
+                name: "Baidhya healthpost",
+                location: 'xyz',
+                gps_location: {
+                    coordinates: ['45.22', '342.324']
+                }
+            };
+            chai.request(server)
+                .post('/healthpost')
+                .send(healthpost_new)
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
@@ -87,66 +62,87 @@ describe('Healthpost', () => {
                     res.body.should.have.property('employee');
                     res.body.should.have.property('medicine');
                     res.body.should.have.property('gps_location');
-                    res.body.should.have.property('_id').eql(healthpost.id);
                     done();
                 });
         });
 
-
+        it('It should DELETE all the records in the healthpost', (done) => {
+            chai.request(server)
+                .delete('/healthpost')
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.message.should.equal('Successfully deleted');
+                    done();
+                });
+        });
     });
 
-    it('it should UPDATE information of healthpost given the id', (done) => {
-        let healthpost = new HealthPost({
-            name: "siddhi smriti",
-            location: 'Bhaktapur',
-            employee: healthPost1.employee,
-            medicine: healthPost1.medicine,
-            gps_location: 'tyu89'
-        })
 
-        healthpost.save((err, healthpost) => {
+    describe('Request on /healthpost/id', function () {
+        let healthPost = {
+            name: "kathmandu pharma",
+            location: "xyz",
+            gps_location: {
+                coordinates: ['45.22', '342.324']
+            }
+        };
+
+        let healthpost_data = null;
+
+        before((done) => {
+            HealthPost(healthPost).save().then((data) => {
+                healthpost_data = data;
+                done();
+            });
+        });
+
+        after((done) => {
+            HealthPost.collection.drop();
+            done();
+        });
+
+        it('it should GET information about healthpost by the given id', (done) => {
             chai.request(server)
-                .put('/healthpost/' + healthpost.id)
-                .send({
-                    name: "siddhi smriti",
-                    location: 'Bhaktapur',
-                    gps_location: 'xyz'
-                })
+                .get(`/healthpost/${healthpost_data._id}`)
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
-                    // res.body.should.have.property('message').eq('Healthpost information updated!');
-                    res.body.should.have.property('gps_location').eq('xyz');
+                    res.body.should.have.property('name');
+                    res.body.should.have.property('location');
+                    res.body.should.have.property('employee');
+                    res.body.should.have.property('medicine');
+                    res.body.should.have.property('gps_location');
+                    res.body._id.should.equal(healthpost_data._id.toString());
                     done();
                 });
         });
 
-    });
-
-    it('It should DELETE all the records in the healthpost according to id', (done) => {
-        const healthpost = new HealthPost({
-            name: "siddhi smriti",
-            location: 'Bhaktapur',
-            gps_location: 'abc',
-            employee: healthPost1.employee,
-            medicine: healthPost1.medicine,
-            gps_location: 'xyz'
-        })
-        healthpost.save((err, healthpost) => {
+        it('it should UPDATE information of healthpost given the id', (done) => {
+            let healthpost_update = {
+                location: 'Bhaktapur'
+            };
             chai.request(server)
-                .delete('/healthpost/' + healthpost.id)
+                .put(`/healthpost/${healthpost_data._id}`)
+                .send(healthpost_update)
                 .end((err, res) => {
                     res.should.have.status(200);
+                    res.body.should.be.a('object');
+                    res.body.location.should.equal(healthpost_update.location);
                     done();
                 });
-        })
+
+        });
+
+        it('It should DELETE all the records in the healthpost according to id', (done) => {
+            chai.request(server)
+                .delete(`/healthpost/${healthpost_data._id}`)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.message.should.equal('Successfully deleted');
+                    done();
+                });
+
+        });
 
     });
-
-})
-
-
-
-
-
-
+});
