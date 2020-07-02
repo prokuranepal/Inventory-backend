@@ -1,4 +1,3 @@
-
 const mongoose = require("mongoose");
 
 const SuppliersSchema = new mongoose.Schema({
@@ -16,9 +15,8 @@ const SuppliersSchema = new mongoose.Schema({
 
     Medicinetype: [{
         type: String
-    }
-    ],
-},{
+    }],
+}, {
 
     timestamps: true
 });
