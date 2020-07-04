@@ -146,7 +146,7 @@ describe('Vaccine', () => {
 
         it('it should UPDATE information of vaccine given the id', (done) => {
             let vaccine_update = {
-                expiryDateTime: "2019-07-08"
+                vaccineUsedFor: "yyy"
             }
             chai.request(server)
                 .put(`/vaccine/${vaccine_data._id}`)
@@ -154,7 +154,7 @@ describe('Vaccine', () => {
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
-                    res.body.expiryDateTime.should.equal(vaccine_update.expiryDataTime);
+                    res.body.vaccineUsedFor.should.equal(vaccine_update.vaccineUsedFor);
                     done();
                 });
         });
