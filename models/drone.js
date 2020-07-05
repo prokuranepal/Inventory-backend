@@ -20,9 +20,9 @@ const DroneSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Mission'
     }],
-    healthpost: {
+    hospital: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'HealthPost'
+        ref: 'Hospital'
     },
 
 }, {
