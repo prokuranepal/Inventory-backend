@@ -17,9 +17,9 @@ bloodRouter.route('/')
   .get(cors.cors, (req, res, next) => {
     if (req.query.bloodGroup) {
       Blood.find({
-          bloodGroup: req.query.bloodGroup
-        })
-        .populate('healthpost')
+        bloodGroup: req.query.bloodGroup
+      })
+        .populate('hospital')
         .then((blood) => {
           res.statusCode = 200;
           res.setHeader('Content-Type', 'application/json');
@@ -28,7 +28,7 @@ bloodRouter.route('/')
         .catch((err) => next(err));
     } else {
       Blood.find({})
-        .populate('healthpost')
+        .populate('hospital')
         .then((blood) => {
           res.statusCode = 200;
           res.setHeader('Content-Type', 'application/json');
@@ -49,8 +49,8 @@ bloodRouter.route('/')
   .delete(cors.cors, (req, res, next) => {
     if (req.query.bloodGroup) {
       Blood.remove({
-          bloodGroup: req.query.bloodGroup
-        })
+        bloodGroup: req.query.bloodGroup
+      })
         .then((blood) => {
           res.statusCode = 200;
           res.setHeader('Content-Type', 'application/json');
@@ -81,9 +81,9 @@ bloodRouter.route('/:bloodId')
   })
   .get(cors.corsWithOptions, (req, res, next) => {
     Blood.findOne({
-        _id: req.params.bloodId
-      })
-      .populate('healthpost')
+      _id: req.params.bloodId
+    })
+      .populate('hospital')
       .then((blood) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
@@ -93,10 +93,10 @@ bloodRouter.route('/:bloodId')
   })
   .put(cors.cors, (req, res, next) => {
     Blood.findByIdAndUpdate(req.params.bloodId, {
-        $set: req.body
-      }, {
-        new: true
-      })
+      $set: req.body
+    }, {
+      new: true
+    })
       .then((blood) => {
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');

@@ -3,11 +3,11 @@ const mongoose = require('mongoose');
 
 const BloodSchema = new mongoose.Schema({
 
-    bloodGroup:{
+    bloodGroup: {
         type: String,
-        required:true
+        required: true
     },
-    collectedDateTime:{
+    collectedDateTime: {
         type: Date,
         required: true
     },
@@ -15,26 +15,25 @@ const BloodSchema = new mongoose.Schema({
         type: Date,
         required: true
     },
-    expiryDateTime:{
+    expiryDateTime: {
         type: Date,
         required: true
     },
-    quantity:{
-        type:Number,
+    quantity: {
+        type: Number,
         required: true
-    
-    },
-    healthpost: {
 
+    },
+    hospital: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'HealthPost',
+        ref: 'Hospital',
         required: true
     }
-},{
+}, {
     timestamps: true
 });
 
-module.exports = mongoose.model('Blood',BloodSchema);
+module.exports = mongoose.model('Blood', BloodSchema);
 
 
 

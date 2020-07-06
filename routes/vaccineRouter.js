@@ -16,7 +16,7 @@ vaccineRouter.route('/')
 
     .get(cors.corsWithOptions, async (req, res, next) => {
         Vaccine.find({})
-            .populate('healthPost')
+            .populate('hospital')
             .then((vaccine) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
@@ -62,7 +62,7 @@ vaccineRouter.route('/:vaccineId')
     .get(cors.corsWithOptions, async (req, res, next) => {
 
         Vaccine.findOne({ _id: req.params.vaccineId })
-            .populate('healthPost')
+            .populate('hospital')
             .then((vaccine) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
