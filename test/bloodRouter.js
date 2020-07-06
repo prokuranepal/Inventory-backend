@@ -1,7 +1,7 @@
 process.env.NODE_ENV = 'test';
 
 const Blood = require('../models/blood');
-const Healthpost = require('../models/healthpost');
+const Hospital = require('../models/hospital');
 
 var chai = require('chai');
 var server = require('../app');
@@ -24,21 +24,21 @@ describe('Blood', () => {
             expiryDateTime: "2020-09-08",
             quantity: 18
         };
-    
-        let healthpost = new Healthpost({
+
+        let hospital = new Hospital({
             name: 'ABC',
             location: 'CDE',
             gps_location: {
                 coordinates: ['25.2', '85.1']
             }
         });
-    
+
         var hp_data = null;
         var blood_data = null;
         before((done) => {
-            healthpost.save().then((data) => {
+            hospital.save().then((data) => {
                 hp_data = data;
-                blood.healthpost = data._id;
+                blood.hospital = data._id;
                 Blood(blood).save().then((data_blood) => {
                     blood_data = data_blood;
                     done();
@@ -47,7 +47,7 @@ describe('Blood', () => {
         });
 
         after((done) => {
-            Healthpost.collection.drop();
+            Hospital.collection.drop();
             Blood.collection.drop();
             done();
         });
@@ -70,7 +70,7 @@ describe('Blood', () => {
                 storedDateTime: "2020-09-20",
                 expiryDateTime: "2022-07-08",
                 quantity: 19,
-                healthpost: hp_data._id
+                hospital: hp_data._id
             };
             chai.request(server)
                 .post('/blood')
@@ -83,7 +83,7 @@ describe('Blood', () => {
                     res.body.should.have.property('storedDateTime');
                     res.body.should.have.property('expiryDateTime');
                     res.body.should.have.property('quantity');
-                    res.body.should.have.property('healthpost');
+                    res.body.should.have.property('hospital');
                     done();
                 });
         });
@@ -107,21 +107,20 @@ describe('Blood', () => {
             expiryDateTime: "2020-09-08",
             quantity: 18
         };
-    
-        let healthpost = new Healthpost({
+
+        let hospital = new Hospital({
             name: 'ABC',
             location: 'CDE',
             gps_location: {
                 coordinates: ['25.2', '85.1']
             }
         });
-    
         var hp_data = null;
         var blood_data = null;
         before((done) => {
-            healthpost.save().then((data) => {
+            hospital.save().then((data) => {
                 hp_data = data;
-                blood.healthpost = data._id;
+                blood.hospital = data._id;
                 Blood(blood).save().then((data_blood) => {
                     blood_data = data_blood;
                     done();
@@ -130,7 +129,7 @@ describe('Blood', () => {
         });
 
         after((done) => {
-            Healthpost.collection.drop();
+            Hospital.collection.drop();
             Blood.collection.drop();
             done();
         });
