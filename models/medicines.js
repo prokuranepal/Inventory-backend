@@ -39,6 +39,18 @@ const Medicine = new Schema({
     type: {
         type: String,
         required: true
+    },
+    user_added:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'Users'
+
+    },
+    hospital:{
+        type:mongoose.Schema
+
+    },
+    suppliers:{
+
     }
 }, {
     timestamps: true
