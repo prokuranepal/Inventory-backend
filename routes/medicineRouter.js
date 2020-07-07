@@ -18,6 +18,9 @@ medicineRouter.route('/')
 	})
 	.get(cors.cors, (req, res, next) => {
 		Medicines.find({})
+			.populate('user_added')
+			.populate('hospital')
+			.populate('suppliers')
 			.then((medicines) => {
 				res.statusCode = 200;
 				res.setHeader('Content-Type', 'application/json');
@@ -58,6 +61,9 @@ medicineRouter.route('/:medicineId')
 	})
 	.get(cors.cors, (req, res, next) => {
 		Medicines.findById(req.params.medicineId)
+			.populate('user_added')
+			.populate('hospital')
+			.populate('suppliers')
 			.then((medicine) => {
 				res.statusCode = 200;
 				res.setHeader('Content-Type', 'application/json');
@@ -72,10 +78,10 @@ medicineRouter.route('/:medicineId')
 	})
 	.put(cors.cors, (req, res, next) => {
 		Medicines.findByIdAndUpdate(req.params.medicineId, {
-				$set: req.body
-			}, {
-				new: true
-			})
+			$set: req.body
+		}, {
+			new: true
+		})
 			.then((medicine) => {
 				res.statusCode = 200;
 				res.setHeader('Content-Type', 'application/json');
