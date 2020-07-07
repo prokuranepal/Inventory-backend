@@ -42,7 +42,7 @@ const Medicine = new Schema({
     },
     user_added:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'Users',
+        ref:'User',
         required:true
     },
     hospital:{
