@@ -42,15 +42,18 @@ const Medicine = new Schema({
     },
     user_added:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:'Users'
-
+        ref:'Users',
+        required:true
     },
     hospital:{
-        type:mongoose.Schema
-
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Hospital',
+        required:true
     },
     suppliers:{
-
+        type: mongoose.Schema.Types.ObjectId,
+        ref:'Suppliers',
+        required:true
     }
 }, {
     timestamps: true
