@@ -4,6 +4,7 @@ var express = require('express'); // imports framework.
 var path = require('path'); // core node module for working and handling paths.
 var cookieParser = require('cookie-parser'); // Helps to handle cookies.
 var bodyParser = require('body-parser'); // extracts methods parameter and add a body object to the request. 
+var session = require('express-session');
 var logger = require('morgan'); // middleware for logging requests and responses.
 
 var passport = require('passport'); // A middleware for authentication of users.
@@ -36,8 +37,9 @@ app.use(bodyParser.json()); // puts data in request.body from POST request
 app.use(bodyParser.urlencoded({ extended: false }));  // puts data in request.query from GET request(or form url)
 
 app.use(passport.initialize());
- // Initialize passport to use as a middleware.
 
+ // Initialize passport to use as a middleware.
+app.use(passport.session());
 
 app.use(express.static(path.join(__dirname, 'public')));  // static file to be linked and accessed from public folder.
 
