@@ -5,9 +5,6 @@ const session = require('express-session');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const async = require('async');
-const xoauth2 = require('xoauth2');
-
-
 
 const passport = require('passport');
 const authenticate = require('../authenticate');
@@ -22,11 +19,7 @@ userRouter.options('*', cors.corsWithOptions, (req, res) => {
   res.sendStatus(200);
 });
 
-userRouter.get('/signup', function(req, res) {
-  res.render('signup', {
-    user: req.user
-  });
-});
+
 
 userRouter.post('/signup', cors.corsWithOptions, (req, res, next) => {
   User.register(new User({
@@ -72,9 +65,6 @@ userRouter.post('/signup', cors.corsWithOptions, (req, res, next) => {
   });
 });
 
-userRouter.get("/login", function(req, res){
-  res.render('login'); 
-});
 
 
 userRouter.post('/login', cors.corsWithOptions, (req, res, next) => {
@@ -83,23 +73,22 @@ userRouter.post('/login', cors.corsWithOptions, (req, res, next) => {
     if (!user) {
       res.statusCode = 401;
       res.setHeader('Content-Type', 'application/json');
-      return res.redirect('/login');
-      // return res.json({
-      //   success: false,
-      //   status: 'Login Unsuccessful',
-      //   err: info
-      // });
+
+      return res.json({
+        success: false,
+        status: 'Login Unsuccessful',
+        err: info
+      });
     }
     req.logIn(user, (err) => {
       if (err) {
         res.statusCode = 401;
-        res.setHeader('Content-Type', 'application/json');
-        return res.redirect('/')
-        // return res.json({
-        //   success: false,
-        //   status: 'Login Unsuccessful',
-        //   err: 'Could not log in user'
-        // });
+        res.setHeader('Content-Type', 'application/json')
+        return res.json({
+          success: false,
+          status: 'Login Unsuccessful',
+          err: 'Could not log in user'
+        });
       }
 
       var token = authenticate.getToken({
@@ -129,11 +118,6 @@ userRouter.get('/logout', cors.corsWithOptions, (req, res, next) => {
   }
 });
 
-userRouter.get('/forgot', cors.corsWithOptions, function(req, res) {
-  res.render('forgot', {
-    user: req.user
-  });
-});
 
 userRouter.post('/forgot', cors.corsWithOptions, (req, res, next) => {
   async.waterfall([
@@ -147,8 +131,10 @@ userRouter.post('/forgot', cors.corsWithOptions, (req, res, next) => {
     function (token, done) {
       User.findOne({ email: req.body.email }, function (err, user) {
         if (!user) {
-          // req.flash('error', 'No account with that email address exists.');
-          return res.redirect('/users/forgot');
+          return res.json({
+            success: false,
+            status: 'unsuccessful'
+          });
         }
 
         user.resetPasswordToken = token;
@@ -160,16 +146,19 @@ userRouter.post('/forgot', cors.corsWithOptions, (req, res, next) => {
       });
     },
     function (token, user, done) {
-      var smtpTransport = nodemailer.createTransport( {
-       
+      var smtpTransport = nodemailer.createTransport({
+
         service: 'Gmail',
         auth: {
-            
+
           user: 'kk0388639@gmail.com',
           pass: 'lpcontlerhygxnct'
-          
+
+        },
+        tls: {
+          rejectUnauthorized: false
         }
-    
+
       });
       var mailOptions = {
         from: 'kk0388639@gmail.com',
@@ -177,20 +166,94 @@ userRouter.post('/forgot', cors.corsWithOptions, (req, res, next) => {
         subject: 'Node.js Password Reset',
         text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
           'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-          'http://localhost:3000 /users/reset/' + token + '\n\n' +
+          token + '\n\n' + 'This token is for changing your password ' +
           'If you did not request this, please ignore this email and your password will remain unchanged.\n'
       };
       smtpTransport.sendMail(mailOptions, function (err) {
-        // req.send('info', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
+        res.json({ status: 'success', message: 'An e-mail has been sent to ' + user.email + ' with further instructions.' + token + '\n\n' + 'Click the link below to reset your password' });
         done(err, 'done');
       });
     }
   ], function (err) {
     if (err) return next(err);
-    res.redirect('/users/forgot');
+    err;
   });
 
 });
+
+userRouter.get('/reset/:token', function (req, res) {
+  User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function (err, user) {
+    if (!user) {
+      res.statusCode = 401;
+      res.setHeader('Content-Type', 'application/json');
+      return res.json({
+        success: false,
+        status: 'Password reset token is invalid or has expired.'
+      });
+
+    }
+    else {
+      return res.json({
+        status: 'success',
+        message: 'Token found'
+      })
+    }
+  })
+
+});
+
+userRouter.post('/reset/:token', function (req, res) {
+  async.waterfall([
+    function (done) {
+      User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function (err, user) {
+        if (!user) {
+          res.json({ message: 'Password reset token is invalid or has expired.' });
+        }
+
+        user.password = req.body.password;
+        user.setPassword(user.password, function (err) {
+          user.resetPasswordToken = undefined;
+          user.resetPasswordExpires = undefined;
+
+          user.save(function (err) {
+            req.logIn(user, function (err) {
+              done(err, user);
+            });
+          });
+        })
+
+      });
+    },
+    function (user, done) {
+      var smtpTransport = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+          user: 'kk0388639@gmail.com',
+          pass: 'lpcontlerhygxnc'
+        },
+        tls: {
+          rejectUnauthorized: false
+        }
+
+      });
+      var mailOptions = {
+        to: user.email,
+        from: 'kk0388639@gmail.com',
+        subject: 'Your password has been changed',
+        text: 'Hello,\n\n' +
+          'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
+      };
+
+      smtpTransport.sendMail(mailOptions, function (err) {
+        res.json({ status: 'success', message: 'An e-mail has been sent to ' + user.email + 'and the password has been sucessfully changed' });
+        done(err, 'done');
+      });
+    }
+  ], function (err) {
+    if (err) return err;
+  });
+});
+
 
 userRouter.get('/checkJWTToken', cors.corsWithOptions, (req, res, next) => {
   passport.authenticate('jwt', {
