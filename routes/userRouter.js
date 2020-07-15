@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const User = require('../models/users');
-const session = require('express-session');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const async = require('async');
