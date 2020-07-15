@@ -5,6 +5,7 @@ const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 const async = require('async');
 
+
 const passport = require('passport');
 const authenticate = require('../authenticate');
 const cors = require('./cors');
@@ -117,6 +118,21 @@ userRouter.get('/logout', cors.corsWithOptions, (req, res, next) => {
   }
 });
 
+var smtpTransport = nodemailer.createTransport({
+
+  service: 'Gmail',
+  auth: {
+
+    user: 'kk0388639@gmail.com',
+    pass: 'lpcontlerhygxnct'
+
+  },
+  tls: {
+    rejectUnauthorized: false
+  }
+
+});
+
 
 userRouter.post('/forgot', cors.corsWithOptions, (req, res, next) => {
   async.waterfall([
@@ -145,20 +161,8 @@ userRouter.post('/forgot', cors.corsWithOptions, (req, res, next) => {
       });
     },
     function (token, user, done) {
-      var smtpTransport = nodemailer.createTransport({
+      smtpTransport;
 
-        service: 'Gmail',
-        auth: {
-
-          user: 'kk0388639@gmail.com',
-          pass: 'lpcontlerhygxnct'
-
-        },
-        tls: {
-          rejectUnauthorized: false
-        }
-
-      });
       var mailOptions = {
         from: 'kk0388639@gmail.com',
         to: user.email,
@@ -224,17 +228,8 @@ userRouter.post('/reset/:token', function (req, res) {
       });
     },
     function (user, done) {
-      var smtpTransport = nodemailer.createTransport({
-        service: 'Gmail',
-        auth: {
-          user: 'kk0388639@gmail.com',
-          pass: 'lpcontlerhygxnc'
-        },
-        tls: {
-          rejectUnauthorized: false
-        }
 
-      });
+      smtpTransport;
       var mailOptions = {
         to: user.email,
         from: 'kk0388639@gmail.com',
