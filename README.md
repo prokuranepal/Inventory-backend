@@ -1,3 +1,5 @@
+<a href="https://codeclimate.com/github/prokuranepal/Inventory-backend/maintainability"><img src="https://api.codeclimate.com/v1/badges/e77c1316979c04436631/maintainability" /></a>
+<a href="https://codeclimate.com/github/prokuranepal/Inventory-backend/test_coverage"><img src="https://api.codeclimate.com/v1/badges/e77c1316979c04436631/test_coverage" /></a>
 # Inventory Management System
 
 ---
