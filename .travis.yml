@@ -14,7 +14,7 @@ cache:
   directories:
     - node_modules
 script:
-  - npm test
+  - npm run-script coverage
   - bundle exec rspec
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
