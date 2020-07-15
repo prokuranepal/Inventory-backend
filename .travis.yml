@@ -1,4 +1,7 @@
 sudo: true
+env:
+  global:
+    - CC_TEST_REPORTER_ID=CC_TEST_REPORTER
 language: node_js
 services: mongodb
 before_script:
