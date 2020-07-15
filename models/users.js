@@ -12,9 +12,9 @@ var User = new Schema({
         required: true
     },
     email: {
-        type:String,
-        required:true,
-        unique: true
+        type: String,
+        required: true,
+         unique: true
     },
     phonenumber: {
         type: String,
@@ -26,7 +26,9 @@ var User = new Schema({
     admin: {
         type: Boolean,
         default: false
-    }
+    },
+    resetPasswordToken: String,
+    resetPasswordExpires: Date
 }, {
     timestamps: true
 });

@@ -36,6 +36,7 @@ app.use(bodyParser.json()); // puts data in request.body from POST request
 app.use(bodyParser.urlencoded({ extended: false }));  // puts data in request.query from GET request(or form url)
 
 app.use(passport.initialize());
+
  // Initialize passport to use as a middleware.
 
 
