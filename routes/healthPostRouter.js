@@ -1,11 +1,11 @@
-
-const Healthpost = require('../models/healthpost');
+const Healthpost = require('../models/healthFacilities');
 const cors = require('./cors');
 const express = require('express');
 const healthPostRouter = express.Router();
 const bodyparser = require('body-parser');
-// const mongoose = require('mongoose');
-// const authenticate = require('../authenticate');
+const success_response = require('./functions/success_response');
+const mongoose = require('mongoose');
+const authenticate = require('../authenticate');
 
 healthPostRouter.use(bodyparser.json());
 
@@ -13,90 +13,76 @@ healthPostRouter.route('/')
   .options(cors.corsWithOptions, (req, res) => {
     res.sendStatus(200);
   })
-
-  .get(cors.corsWithOptions, async (req, res, next) => {
-    Healthpost.find({})
+  .get(cors.corsWithOptions, (req, res, next) => {
+    Healthpost.find({
+        type: 'healthpost'
+      })
       .populate('medicine')
       .then((healthPost) => {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json(healthPost);
+        success_response(res, healthPost);
       }, (err) => next(err))
       .catch((err) => next(err));
-
   })
-
-
-  .post(cors.corsWithOptions, async (req, res, next) => {
-
+  .post(cors.corsWithOptions, (req, res, next) => {
+    req.body.type = 'healthpost';
+    req.body.healthpost = [];
     Healthpost.create(req.body)
-
       .then((healthPost) => {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json(healthPost);
+        success_response(res, healthPost);
       }, (err) => next(err))
       .catch((err) => next(err));
   })
-
-
-  .delete(cors.corsWithOptions, async (req, res, next) => {
-
-    Healthpost.remove({})
+  .delete(cors.corsWithOptions, (req, res, next) => {
+    Healthpost.remove({
+        type: 'healthpost'
+      })
       .then((healthPost) => {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json({
+        message = {
           status: true,
           message: 'Successfully deleted'
-        });
+        };
+        success_response(res, message);
       }, (err) => next(err))
       .catch((err) => next(err));
-
-
   });
 
 
 healthPostRouter.route('/:healthpostId')
-
-  .get(cors.corsWithOptions, async (req, res, next) => {
-
-    Healthpost.findOne({ _id: req.params.healthpostId })
+  .options(cors.corsWithOptions, (req, res) => {
+    res.sendStatus(200);
+  })
+  .get(cors.corsWithOptions, (req, res, next) => {
+    Healthpost.findOne({
+        _id: req.params.healthpostId,
+        type: 'healthpost'
+      })
       .populate('medicine')
       .then((healthPost) => {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json(healthPost);
+        success_response(res, healthPost);
       }, (err) => next(err))
       .catch((err) => next(err));
-
   })
-
   .put(cors.cors, (req, res, next) => {
-
-    Healthpost.findByIdAndUpdate(req.params.healthpostId, {
-      $set: req.body
-    }, {
-      new: true
-    })
-      .then((medicineResult) => {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json(medicineResult);
+    req.body.type = 'healthpost';
+    req.body.healthpost = [];
+    Healthpost.findOneAndUpdate({_id:req.params.healthpostId,type:'healthpost'}, {
+        $set: req.body
+      }, {
+        new: true
+      })
+      .then((healthPost) => {
+        success_response(res, healthPost);
       }, (err) => next(err))
       .catch((err) => next(err));
   })
-
-
   .delete(cors.cors, (req, res, next) => {
-    Healthpost.findByIdAndRemove(req.params.healthpostId)
+    Healthpost.findOneAndRemove({_id:req.params.healthpostId,type:'healthpost'})
       .then((healthPost) => {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json({
+        message = {
           status: true,
           message: 'Successfully deleted'
-        });
+        };
+        success_response(res, message);
       }, (err) => next(err))
       .catch((err) => next(err));
   });

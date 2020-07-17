@@ -17,7 +17,7 @@ droneRouter.route('/')
     })
     .get(cors.cors, (req, res, next) => {
         Drone.find({})
-            .populate('hospital')
+            .populate('healthfacilities')
             .then((drones) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
@@ -54,7 +54,7 @@ droneRouter.route('/:droneId')
     })
     .get(cors.cors, (req, res, next) => {
         Drone.findById(req.params.droneId)
-            .populate('hospital')
+            .populate('healthfacilities')
             .then((drone) => {
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');

@@ -8,7 +8,7 @@ var should = chai.should();
 
 chai.use(chaiHTTP);
 
-describe('Healthpost', () => {
+describe('Drone Request Test', () => {
     describe('Request on /drone', function () {
         let drone = {
             name: "spoiler66",

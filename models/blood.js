@@ -1,8 +1,6 @@
 const mongoose = require('mongoose');
 
-
 const BloodSchema = new mongoose.Schema({
-
     bloodGroup: {
         type: String,
         required: true
@@ -22,11 +20,10 @@ const BloodSchema = new mongoose.Schema({
     quantity: {
         type: Number,
         required: true
-
     },
-    hospital: {
+    healthFacilities: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Hospital',
+        ref: 'HealthFacilities',
         required: true
     }
 }, {
