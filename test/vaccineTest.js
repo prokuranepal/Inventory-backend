@@ -1,15 +1,12 @@
 process.env.NODE_ENV = 'test';
 
 const Vaccine = require('../models/vaccine');
-const Hospital = require('../models/hospital');
+const Hospital = require('../models/healthFacilities');
 
 var chai = require('chai');
 var server = require('../app');
 var chaiHTTP = require('chai-http');
 
-const {
-    verify
-} = require('jsonwebtoken');
 chai.use(chaiHTTP);
 
 var should = chai.should();
@@ -28,7 +25,8 @@ describe('Vaccine', () => {
             location: 'CDE',
             gps_location: {
                 coordinates: ['25.2', '85.1']
-            }
+            },
+            type:'hospital'
         });
 
         var hos_data = null;
@@ -36,7 +34,7 @@ describe('Vaccine', () => {
         before((done) => {
             hospital.save().then((data) => {
                 hos_data = data;
-                vaccine.hospital = data._id;
+                vaccine.healthFacilities = data._id;
                 Vaccine(vaccine).save().then((data_vaccine) => {
                     vaccine_data = data_vaccine;
                     done();
@@ -66,8 +64,7 @@ describe('Vaccine', () => {
                 vaccineName: "Measeles vaccine",
                 vaccineUsedFor: "abc",
                 expiryDateTime: "2019-06-07",
-
-                hospital: hos_data._id
+                healthFacilities: hos_data._id
             };
             chai.request(server)
                 .post('/vaccine')
@@ -78,7 +75,7 @@ describe('Vaccine', () => {
                     res.body.should.have.property('vaccineName');
                     res.body.should.have.property('vaccineUsedFor');
                     res.body.should.have.property('expiryDateTime');
-                    res.body.should.have.property('hospital');
+                    res.body.should.have.property('healthFacilities');
                     done();
                 });
         });
@@ -107,7 +104,8 @@ describe('Vaccine', () => {
             location: 'CDE',
             gps_location: {
                 coordinates: ['25.2', '85.1']
-            }
+            },
+            type:'hospital'
         });
 
         var hos_data = null;
@@ -115,7 +113,7 @@ describe('Vaccine', () => {
         before((done) => {
             hospital.save().then((data) => {
                 hos_data = data;
-                vaccine.hospital = data._id;
+                vaccine.healthFacilities = data._id;
                 Vaccine(vaccine).save().then((data_vaccine) => {
                     vaccine_data = data_vaccine;
                     done();

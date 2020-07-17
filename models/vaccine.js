@@ -18,9 +18,9 @@ const VaccineSchema = new mongoose.Schema({
         required: true
 
     },
-    hospital: {
+    healthFacilities: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Hospital',
+        ref: 'HealthFacilities',
         required: true
     }
 }, {

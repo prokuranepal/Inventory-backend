@@ -1,6 +1,6 @@
 process.env.NODE_ENV = 'test';
 
-let HealthPost = require('../models/healthpost');
+let HealthPost = require('../models/healthFacilities');
 var chai = require('chai');
 var server = require('../app');
 var chaiHTTP = require('chai-http');
@@ -15,7 +15,8 @@ describe('Healthpost', () => {
             location: "xyz",
             gps_location: {
                 coordinates: ['45.22', '342.324']
-            }
+            },
+            type:'healthpost'
         };
 
         let healthpost_data = null;
@@ -84,7 +85,8 @@ describe('Healthpost', () => {
             location: "xyz",
             gps_location: {
                 coordinates: ['45.22', '342.324']
-            }
+            },
+            type:'healthpost'
         };
 
         let healthpost_data = null;

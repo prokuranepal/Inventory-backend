@@ -6,7 +6,7 @@ const authenticate = require('../authenticate');
 const cors = require('./cors');
 
 const Medicines = require('../models/medicines');
-
+const success_response = require('./functions/success_response');
 
 const medicineRouter = express.Router();
 
@@ -19,21 +19,17 @@ medicineRouter.route('/')
 	.get(cors.cors, (req, res, next) => {
 		Medicines.find({})
 			.populate('user_added')
-			.populate('hospital')
+			.populate('healthfacilities')
 			.populate('suppliers')
 			.then((medicines) => {
-				res.statusCode = 200;
-				res.setHeader('Content-Type', 'application/json');
-				res.json(medicines);
+				success_response(res, medicines);
 			}, (err) => next(err))
 			.catch((err) => next(err));
 	})
 	.post(cors.cors, (req, res, next) => {
 		Medicines.create(req.body)
 			.then((medicine) => {
-				res.statusCode = 200;
-				res.setHeader('Content-Type', 'application/json');
-				res.json(medicine);
+				success_response(res, medicine);
 			}, (err) => next(err))
 			.catch((err) => next(err));
 	})
@@ -45,12 +41,11 @@ medicineRouter.route('/')
 	.delete(cors.cors, (req, res, next) => {
 		Medicines.remove({})
 			.then((medicine) => {
-				res.statusCode = 200;
-				res.setHeader('Content-Type', 'application/json');
-				res.json({
+				message = {
 					status: true,
 					message: 'Successfully deleted'
-				});
+				};
+				success_response(res, message);
 			}, (err) => next(err))
 			.catch((err) => next(err));
 	});
@@ -62,12 +57,10 @@ medicineRouter.route('/:medicineId')
 	.get(cors.cors, (req, res, next) => {
 		Medicines.findById(req.params.medicineId)
 			.populate('user_added')
-			.populate('hospital')
+			.populate('healthfacilities')
 			.populate('suppliers')
 			.then((medicine) => {
-				res.statusCode = 200;
-				res.setHeader('Content-Type', 'application/json');
-				res.json(medicine);
+				success_response(res, medicine);
 			}, (err) => next(err))
 			.catch((err) => next(err));
 	})
@@ -78,26 +71,23 @@ medicineRouter.route('/:medicineId')
 	})
 	.put(cors.cors, (req, res, next) => {
 		Medicines.findByIdAndUpdate(req.params.medicineId, {
-			$set: req.body
-		}, {
-			new: true
-		})
+				$set: req.body
+			}, {
+				new: true
+			})
 			.then((medicine) => {
-				res.statusCode = 200;
-				res.setHeader('Content-Type', 'application/json');
-				res.json(medicine);
+				success_response(res, medicine);
 			}, (err) => next(err))
 			.catch((err) => next(err));
 	})
 	.delete(cors.cors, (req, res, next) => {
 		Medicines.findByIdAndRemove(req.params.medicineId)
 			.then((medicine) => {
-				res.statusCode = 200;
-				res.setHeader('Content-Type', 'application/json');
-				res.json({
+				message = {
 					status: true,
 					message: 'Successfully deleted'
-				});
+				};
+				success_response(res, message);
 			}, (err) => next(err))
 			.catch((err) => next(err));
 	});

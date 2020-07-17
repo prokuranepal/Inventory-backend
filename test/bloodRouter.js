@@ -1,15 +1,12 @@
 process.env.NODE_ENV = 'test';
 
 const Blood = require('../models/blood');
-const Hospital = require('../models/hospital');
+const Hospital = require('../models/healthFacilities');
 
 var chai = require('chai');
 var server = require('../app');
 var chaiHTTP = require('chai-http');
 
-const {
-    verify
-} = require('jsonwebtoken');
 chai.use(chaiHTTP);
 
 var should = chai.should();
@@ -30,7 +27,8 @@ describe('Blood', () => {
             location: 'CDE',
             gps_location: {
                 coordinates: ['25.2', '85.1']
-            }
+            },
+            type:'hospital'
         });
 
         var hp_data = null;
@@ -38,7 +36,7 @@ describe('Blood', () => {
         before((done) => {
             hospital.save().then((data) => {
                 hp_data = data;
-                blood.hospital = data._id;
+                blood.healthFacilities = data._id;
                 Blood(blood).save().then((data_blood) => {
                     blood_data = data_blood;
                     done();
@@ -70,7 +68,7 @@ describe('Blood', () => {
                 storedDateTime: "2020-09-20",
                 expiryDateTime: "2022-07-08",
                 quantity: 19,
-                hospital: hp_data._id
+                healthFacilities: hp_data._id
             };
             chai.request(server)
                 .post('/blood')
@@ -83,7 +81,7 @@ describe('Blood', () => {
                     res.body.should.have.property('storedDateTime');
                     res.body.should.have.property('expiryDateTime');
                     res.body.should.have.property('quantity');
-                    res.body.should.have.property('hospital');
+                    res.body.should.have.property('healthFacilities');
                     done();
                 });
         });
@@ -113,14 +111,15 @@ describe('Blood', () => {
             location: 'CDE',
             gps_location: {
                 coordinates: ['25.2', '85.1']
-            }
+            },
+            type:'hospital'
         });
         var hp_data = null;
         var blood_data = null;
         before((done) => {
             hospital.save().then((data) => {
                 hp_data = data;
-                blood.hospital = data._id;
+                blood.healthFacilities = data._id;
                 Blood(blood).save().then((data_blood) => {
                     blood_data = data_blood;
                     done();

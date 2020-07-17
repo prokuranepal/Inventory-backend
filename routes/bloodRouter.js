@@ -6,7 +6,7 @@ const cors = require('./cors');
 
 const Blood = require('../models/blood');
 const bloodRouter = express.Router();
-
+const success_response = require('./functions/success_response');
 
 bloodRouter.use(bodyparser.json());
 
@@ -17,22 +17,18 @@ bloodRouter.route('/')
   .get(cors.cors, (req, res, next) => {
     if (req.query.bloodGroup) {
       Blood.find({
-        bloodGroup: req.query.bloodGroup
-      })
-        .populate('hospital')
+          bloodGroup: req.query.bloodGroup
+        })
+        .populate('healthfacilities')
         .then((blood) => {
-          res.statusCode = 200;
-          res.setHeader('Content-Type', 'application/json');
-          res.json(blood);
+          success_response(res, blood);
         }, (err) => next(err))
         .catch((err) => next(err));
     } else {
       Blood.find({})
-        .populate('hospital')
+        .populate('healthfacilities')
         .then((blood) => {
-          res.statusCode = 200;
-          res.setHeader('Content-Type', 'application/json');
-          res.json(blood);
+          success_response(res, blood);
         }, (err) => next(err))
         .catch((err) => next(err));
     }
@@ -40,40 +36,35 @@ bloodRouter.route('/')
   .post(cors.cors, (req, res, next) => {
     Blood.create(req.body)
       .then((blood) => {
-        res.statusCode = 200;
-        res.setHeader('content-Type', 'application/json');
-        res.json(blood);
+        success_response(res, blood);
       }, (err) => next(err))
       .catch((err) => next(err));
   })
   .delete(cors.cors, (req, res, next) => {
     if (req.query.bloodGroup) {
       Blood.remove({
-        bloodGroup: req.query.bloodGroup
-      })
+          bloodGroup: req.query.bloodGroup
+        })
         .then((blood) => {
-          res.statusCode = 200;
-          res.setHeader('Content-Type', 'application/json');
-          res.json({
+          message = {
             status: true,
             message: 'Successfully deleted'
-          });
+          };
+          success_response(res, message);
         }, (err) => next(err))
         .catch((err) => next(err));
     } else {
       Blood.remove({})
         .then((blood) => {
-          res.statusCode = 200;
-          res.setHeader('Content-Type', 'application/json');
-          res.json({
+          message = {
             status: true,
             message: 'Successfully deleted'
-          });
+          };
+          success_response(res, message);
         }, (err) => next(err))
         .catch((err) => next(err));
     }
   });
-
 
 bloodRouter.route('/:bloodId')
   .options(cors.corsWithOptions, (req, res) => {
@@ -81,38 +72,33 @@ bloodRouter.route('/:bloodId')
   })
   .get(cors.corsWithOptions, (req, res, next) => {
     Blood.findOne({
-      _id: req.params.bloodId
-    })
-      .populate('hospital')
+        _id: req.params.bloodId
+      })
+      .populate('healthfacilities')
       .then((blood) => {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json(blood);
+        success_response(res, blood);
       }, (err) => next(err))
       .catch((err) => next(err));
   })
   .put(cors.cors, (req, res, next) => {
     Blood.findByIdAndUpdate(req.params.bloodId, {
-      $set: req.body
-    }, {
-      new: true
-    })
+        $set: req.body
+      }, {
+        new: true
+      })
       .then((blood) => {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json(blood);
+        success_response(res, blood)
       }, (err) => next(err))
       .catch((err) => next(err));
   })
   .delete(cors.cors, (req, res, next) => {
     Blood.findByIdAndRemove(req.params.bloodId)
       .then((blood) => {
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json({
+        message = {
           status: true,
           message: 'Successfully deleted'
-        });
+        };
+        success_response(res, message);
       }, (err) => next(err))
       .catch((err) => next(err));
   });

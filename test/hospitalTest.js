@@ -4,7 +4,7 @@ process.env.NODE_ENV = 'test';
 var chai = require('chai');
 var server = require('../app');
 var chaiHTTP = require('chai-http');
-const Hospital = require('../models/hospital');
+const Hospital = require('../models/healthFacilities');
 var should = chai.should();
 
 chai.use(chaiHTTP);
@@ -16,7 +16,8 @@ describe('Hospital', () => {
             location: "abc",
             gps_location: {
                 coordinates: ['45.22', '342.324']
-            }
+            },
+            type:'hospital'
         };
 
         let hospital_data = null;
@@ -82,7 +83,8 @@ describe('Hospital', () => {
             location: "xyz",
             gps_location: {
                 coordinates: ['45.22', '342.324']
-            }
+            },
+            type:'hospital'
         };
 
         let hospital_data = null;

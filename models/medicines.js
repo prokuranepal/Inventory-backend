@@ -45,9 +45,9 @@ const Medicine = new Schema({
         ref:'User',
         required:true
     },
-    hospital:{
+    healthFacilities:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'Hospital',
+        ref:'healthfacilities',
         required:true
     },
     suppliers:{
